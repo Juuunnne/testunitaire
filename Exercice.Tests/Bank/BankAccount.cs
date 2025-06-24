@@ -48,6 +48,7 @@ public class BankAccount : IBankAccount
         {
             throw new ArgumentNullException("Cannot transfer to the same account");
         }
+
         Balance -= amount;
         destinationAccount.Balance += amount;
         TransactionHistory.Add($"Transfert: -{amount:C}");

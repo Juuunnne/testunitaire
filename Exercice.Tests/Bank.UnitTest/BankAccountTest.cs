@@ -5,19 +5,30 @@ namespace Bank.UnitTest;
 public class BankAccountTest
 {
     [Trait("Category", "Account")]
-    [Fact]
-    public void Constructor_NullAccountNumber_ThrowsArgumentException()
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Constructor_InvalidAccountNumber_ThrowsArgumentException(string accountNumber)
     {
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => new BankAccount(null));
+        Assert.Throws<ArgumentException>(() => new BankAccount(accountNumber));
     }
 
-    [Trait("Category", "Account")]
     [Fact]
-    public void Constructor_EmptyAccountNumber_ThrowsArgumentException()
+    public void Constructor_ValidParams_CreatesAccount()
     {
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => new BankAccount(""));
+        // Arrange
+        string accountNumber = "12345";
+        decimal initialBalance = 10000;
+
+        // Act
+        var account = new BankAccount(accountNumber, initialBalance);
+
+        // Assert
+        Assert.Equal(accountNumber, account.AccountNumber);
+        Assert.Equal(initialBalance, account.Balance);
+        Assert.Empty(account.TransactionHistory);
     }
 
     [Trait("Category", "Account")]
