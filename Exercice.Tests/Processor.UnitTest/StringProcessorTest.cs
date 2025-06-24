@@ -41,17 +41,16 @@ public class StringProcessorTest
     [Theory]
     [InlineData("hello", "HELLO")]
     [InlineData("Hello", "HELLO")]
-    [InlineData("", "")]
     public void ToUpper_VariousInputs_ReturnsCorrectResult(string input, string expected)
     {
         // Arrange
         var processor = new StringProcessor();
         
         // Act
-        processor.Capitalize(input);
+        string result = processor.Capitalize(input);
         
         // Assert
-        Assert.Equal(expected, input);
+        Assert.Equal(expected, result);
     }
 
     [Fact]

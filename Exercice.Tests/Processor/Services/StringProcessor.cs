@@ -28,6 +28,10 @@ public class StringProcessor : IStringProcessor
 
     public string Capitalize(string input)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrEmpty(input))
+            throw new ArgumentNullException("Input cannot be null or empty");
+        if (int.TryParse(input, out int number))
+            throw new ArgumentException("Input cannot be a number");
+        return input.ToUpper();
     }
 }
