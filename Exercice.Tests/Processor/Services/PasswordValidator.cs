@@ -12,7 +12,6 @@ public class PasswordValidator : IPasswordValidator
         if (string.IsNullOrEmpty(password))
         {
             result.AddError("Le mot de passe ne peut pas être vide");
-            return result;
         }
         
         if (password.Length < 8)

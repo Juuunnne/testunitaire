@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Processor.Services;
 
 namespace Processor.UnitTest;
@@ -15,60 +16,34 @@ public class PasswordValidatorTest
     public void Validate_WithDifferentPassword_ReturnsCorrectResult(string password, bool expectedValid)
     {
         // Arrange
+        PasswordValidator passwordValidator = new PasswordValidator();
         
         // Act
+        Processor.Model.ValidationResult isValid = passwordValidator.Validate(password);
         
         // Assert
+        Assert.Equal(expectedValid, isValid.IsValid);
     }
     
-    [Fact]
-    public void Validate_WithNoUppercaseLetter_ReturnCorrectErrorMessage ()
+    [Theory]
+    [InlineData("password123", new[] { "Le mot de passe doit contenir au moins une majuscule" })]
+    [InlineData("PASSWORD123", new[] { "Le mot de passe doit contenir au moins une minuscule" })]
+    [InlineData("Password", new[] { "Le mot de passe doit contenir au moins un chiffre" })]
+    [InlineData("Pass123", new[] { "Le mot de passe doit contenir au moins 8 caractères" })]
+    [InlineData("", new[] { "Le mot de passe ne peut pas être vide", "Le mot de passe doit contenir au moins 8 caractères", "Le mot de passe doit contenir au moins une majuscule", "Le mot de passe doit contenir au moins une minuscule", "Le mot de passe doit contenir au moins un chiffre" })]
+
+    public void Validate_WithError_ReturnCorrectErrorMessage (string password,  string[] expectedErrors)
     {
         // Arrange
+        PasswordValidator passwordValidator = new PasswordValidator();
+        Processor.Model.ValidationResult expected = new Processor.Model.ValidationResult();
+        foreach (var error in expectedErrors) expected.AddError(error);
         
         // Act
+        Processor.Model.ValidationResult isValid = passwordValidator.Validate(password);
         
         // Assert
-    }
-    
-    [Fact]
-    public void Validate_WithNoLowercaseLetter_ReturnCorrectErrorMessage ()
-    {
-        // Arrange
-        
-        // Act
-        
-        // Assert
-    }
-    
-    [Fact]
-    public void Validate_WithNoDigitLetter_ReturnCorrectErrorMessage ()
-    {
-        // Arrange
-        
-        // Act
-        
-        // Assert
-    }
-    
-    [Fact]
-    public void Validate_WithPasswordTooShort_ReturnCorrectErrorMessage ()
-    {
-        // Arrange
-        
-        // Act
-        
-        // Assert
-    }
-    
-    [Fact]
-    public void Validate_WithEmptyPassword_ReturnCorrectErrorMessage ()
-    {
-        // Arrange
-        
-        // Act
-        
-        // Assert
+        Assert.Equal(expected.Errors, isValid.Errors);
     }
 
     /// <summary>
