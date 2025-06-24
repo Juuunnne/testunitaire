@@ -6,14 +6,20 @@ namespace Processor.UnitTest;
 
 public class PasswordValidatorTest
 {
-    
+    [Trait("Category", "Password_Validation")]
     [Theory]
-    [InlineData("Password123", true)]
-    [InlineData("password123", false)] // Pas de majuscule
-    [InlineData("PASSWORD123", false)] // Pas de minuscule
-    [InlineData("Password", false)]    // Pas de chiffre
-    [InlineData("Pass123", false)]     // Trop court
-    [InlineData("", false)]            // Vide
+    [InlineData("Password123", false)] // Pas de caractère spéciaux
+    [InlineData("Password123*", true)]
+    [InlineData("password123*", false)] // Pas de majuscule
+    [InlineData("PASSWORD123", false)]  // Pas de minuscule
+    [InlineData("Password", false)]     // Pas de chiffre
+    [InlineData("Pass12*", false)]      // Moins de 8 caractères 
+    [InlineData("Pass123**", true)]
+    [InlineData("", false)]             // Vide
+    [InlineData("        ", false)]     // 8 Espace vide
+    [InlineData("MonSuperMotDePass1*", true)]
+    [InlineData("MonSuperMotDePasse123456*", false)] // Plus de 20 caractères
+    [InlineData(null, false)]            // Null
     public void Validate_WithDifferentPassword_ReturnsCorrectResult(string password, bool expectedValid)
     {
         // Arrange
@@ -25,14 +31,17 @@ public class PasswordValidatorTest
         // Assert
         Assert.Equal(expectedValid, isValid.IsValid);
     }
-    
-    [Theory]
-    [InlineData("password123", new[] { "Le mot de passe doit contenir au moins une majuscule" })]
-    [InlineData("PASSWORD123", new[] { "Le mot de passe doit contenir au moins une minuscule" })]
-    [InlineData("Password", new[] { "Le mot de passe doit contenir au moins un chiffre" })]
-    [InlineData("Pass123", new[] { "Le mot de passe doit contenir au moins 8 caractères" })]
-    [InlineData("", new[] { "Le mot de passe ne peut pas être vide", "Le mot de passe doit contenir au moins 8 caractères", "Le mot de passe doit contenir au moins une majuscule", "Le mot de passe doit contenir au moins une minuscule", "Le mot de passe doit contenir au moins un chiffre" })]
 
+    [Trait("Category", "Password_Validation")]
+    [Theory]
+    [InlineData("password123", new[] { "Le mot de passe doit contenir au moins une majuscule", "Le mot de passe doit contenir au moins un caractère spécial" })]
+    [InlineData("PASSWORD123", new[] { "Le mot de passe doit contenir au moins une minuscule", "Le mot de passe doit contenir au moins un caractère spécial" })]
+    [InlineData("Password123", new[] { "Le mot de passe doit contenir au moins un caractère spécial" })]
+    [InlineData("Password*", new[] { "Le mot de passe doit contenir au moins un chiffre" })]
+    [InlineData("Pass123", new[] { "Le mot de passe doit contenir au moins 8 caractères", "Le mot de passe doit contenir au moins un caractère spécial" })]
+    [InlineData("", new[] { "Le mot de passe ne peut pas être vide", "Le mot de passe doit contenir au moins 8 caractères", "Le mot de passe doit contenir au moins une majuscule", "Le mot de passe doit contenir au moins une minuscule", "Le mot de passe doit contenir au moins un chiffre", "Le mot de passe doit contenir au moins un caractère spécial" })]
+    [InlineData("        ", new[] { "Le mot de passe ne peut pas être vide", "Le mot de passe doit contenir au moins 8 caractères", "Le mot de passe doit contenir au moins une majuscule", "Le mot de passe doit contenir au moins une minuscule", "Le mot de passe doit contenir au moins un chiffre", "Le mot de passe doit contenir au moins un caractère spécial" })]
+    [InlineData(null, new[] { "Le mot de passe ne peut pas être vide", "Le mot de passe doit contenir au moins 8 caractères", "Le mot de passe doit contenir au moins une majuscule", "Le mot de passe doit contenir au moins une minuscule", "Le mot de passe doit contenir au moins un chiffre", "Le mot de passe doit contenir au moins un caractère spécial" })]
     public void Validate_WithError_ReturnCorrectErrorMessage (string password,  string[] expectedErrors)
     {
         // Arrange
@@ -52,9 +61,10 @@ public class PasswordValidatorTest
     /// </summary>
     /// <param name="password">The password to be validated.</param>
     /// <param name="expectedErrorContains">An array of expected error messages or substrings that should be included in the validation errors.</param>
+    [Trait("Category", "Password_Validation")]
     [Theory]
     [MemberData(nameof(PasswordWithErrors))]
-    public void Validate_MotDePasseInvalide_ContientErreursAttendues(
+    public void Validate_WithErrors_ReturnsExpectedErrorMessages(
         string password, string[] expectedErrorContains)
     {
         // Arrange
@@ -70,16 +80,17 @@ public class PasswordValidatorTest
         }
     }
 
-    public static IEnumerable<object[]> PasswordWithErrors => new List<object[]>
+    public static IEnumerable<object[]> PasswordWithErrors()
     {
-        new object[] { "password123", new[] { "majuscule" } },
-        new object[] { "PASSWORD123", new[] { "minuscule" } },
-        new object[] { "Password", new[] { "chiffre" } },
-        new object[] { "Pass123", new[] { "8 caractères" } },
-        new object[] { "", new[] { "vide", "8 caractères", "majuscule", "minuscule", "chiffre" } },
-        new object[] { "Pass", new[] { "8 caractères", "chiffre" } },
-        new object[] { "pass123", new[] { "majuscule" } }
-    };
-
-
+        yield return new object[] { "password123", new[] { "majuscule" } };
+        yield return new object[] { "PASSWORD123", new[] { "minuscule" } };
+        yield return new object[] { "Password123", new[] { "caractère spécial" } };
+        yield return new object[] { "Password", new[] { "chiffre" } };
+        yield return new object[] { "Pass123", new[] { "8 caractères" } };
+        yield return new object[] { "", new[] { "vide", "8 caractères", "majuscule", "minuscule", "chiffre" } };
+        yield return new object[] { "Pass", new[] { "8 caractères", "chiffre" } };
+        yield return new object[] { "pass123", new[] { "majuscule" } };
+        yield return new object[] { " ", new[] { "vide", "8 caractères", "majuscule", "minuscule", "chiffre" } };
+        yield return new object[] { null, new[] { "vide", "8 caractères", "majuscule", "minuscule", "chiffre" } };
+    }
 }

@@ -17,13 +17,29 @@ public class StringProcessor : IStringProcessor
 
     public bool IsPalindrome(string input)
     {
+        if (string.IsNullOrEmpty(input))
+        {
+            throw new ArgumentNullException("Le contenu ne peut pas être vide ou nul");
+        }
+
+        if (input.Trim().Length == 0)
+        {
+            return false;
+        }
+
         string reversed = Reverse(input);
         return input.Replace(" ", "").ToLower() == reversed.Replace(" ", "").ToLower();
     }
 
     public int CountWords(string input)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return 0;
+        }
+
+        string[] words = input.Split(new[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        return words.Length;
     }
 
     public string Capitalize(string input)
