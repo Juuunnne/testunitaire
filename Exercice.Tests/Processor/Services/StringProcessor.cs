@@ -6,7 +6,13 @@ public class StringProcessor : IStringProcessor
 {
     public string Reverse(string input)
     {
-        throw new NotImplementedException();
+        string reversed = "";
+        for (int i = input.Length -1; i >= 0; i--)
+        {
+            reversed += input[i];
+        }
+        
+        return reversed;
     }
 
     public bool IsPalindrome(string input)
