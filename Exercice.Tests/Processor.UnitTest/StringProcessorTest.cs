@@ -41,6 +41,7 @@ public class StringProcessorTest
     [Theory]
     [InlineData("hello", "HELLO")]
     [InlineData("Hello", "HELLO")]
+    [InlineData("Test avec une phrase", "TEST AVEC UNE PHRASE")]
     public void ToUpper_VariousInputs_ReturnsCorrectResult(string input, string expected)
     {
         // Arrange
