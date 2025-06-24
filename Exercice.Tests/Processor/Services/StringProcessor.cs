@@ -17,7 +17,8 @@ public class StringProcessor : IStringProcessor
 
     public bool IsPalindrome(string input)
     {
-        throw new NotImplementedException();
+        string reversed = Reverse(input);
+        return input.Replace(" ", "").ToLower() == reversed.Replace(" ", "").ToLower();
     }
 
     public int CountWords(string input)
