@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 using Processor.Services;
 
 namespace Processor.UnitTest;
@@ -51,21 +52,34 @@ public class PasswordValidatorTest
     /// </summary>
     /// <param name="password">The password to be validated.</param>
     /// <param name="expectedErrorContains">An array of expected error messages or substrings that should be included in the validation errors.</param>
-    // [Theory]
-    // [MemberData(nameof(PasswordWithErrors))]
+    [Theory]
+    [MemberData(nameof(PasswordWithErrors))]
     public void Validate_MotDePasseInvalide_ContientErreursAttendues(
         string password, string[] expectedErrorContains)
     {
         // Arrange
-        
+        var passwordValidator = new PasswordValidator();
+
         // Act
-        
+        var result = passwordValidator.Validate(password);
+
         // Assert
         foreach (var expectedError in expectedErrorContains)
         {
-           
+            Assert.Contains(result.Errors, error => error.Contains(expectedError));
         }
     }
+
+    public static IEnumerable<object[]> PasswordWithErrors => new List<object[]>
+    {
+        new object[] { "password123", new[] { "majuscule" } },
+        new object[] { "PASSWORD123", new[] { "minuscule" } },
+        new object[] { "Password", new[] { "chiffre" } },
+        new object[] { "Pass123", new[] { "8 caractères" } },
+        new object[] { "", new[] { "vide", "8 caractères", "majuscule", "minuscule", "chiffre" } },
+        new object[] { "Pass", new[] { "8 caractères", "chiffre" } },
+        new object[] { "pass123", new[] { "majuscule" } }
+    };
 
 
 }
