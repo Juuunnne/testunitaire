@@ -10,7 +10,11 @@ public class StudentManager : IStudentManager
     
     public void AddStudent(Student student)
     {
-        throw new NotImplementedException();
+        if (_students.Any(s => s.Id == student.Id))
+            throw new ArgumentException("Student already exists");
+        if (student.Id == null)
+            throw new ArgumentException("Student id should be null");
+        _students.Add(student);
     }
 
     public Student GetStudentById(int id)

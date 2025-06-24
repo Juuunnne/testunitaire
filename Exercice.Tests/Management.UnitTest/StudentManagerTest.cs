@@ -22,6 +22,37 @@ public class StudentManagerTest
     }
     
     [Fact]
+    public void AddMultipleStudent_ValidStudent_AddsToCollection()
+    {
+        // Arrange
+        var student1 = new Student { Id = 1, FirstName = "John", LastName = "Doe", Age = 20 };
+        var student2 = new Student { Id = 2, FirstName = "John", LastName = "Doe", Age = 20 };
+        var student3 = new Student { Id = 3, FirstName = "John", LastName = "Doe", Age = 20 };
+        
+        // Act
+        _manager.AddStudent(student1);
+        _manager.AddStudent(student2);
+        _manager.AddStudent(student3);
+        
+        // Assert
+        Assert.Contains(student1, _manager.Students);
+        Assert.Contains(student3, _manager.Students);
+        Assert.Contains(student2, _manager.Students);
+    }
+    
+    [Fact]
+    public void AddMultipleStudent_WithSameIds_CantAdds2ToCollection()
+    {
+        // Arrange
+        var student1 = new Student { Id = 1, FirstName = "John", LastName = "Doe", Age = 20 };
+        var student2 = new Student { Id = 1, FirstName = "John", LastName = "Doe", Age = 20 };
+        
+        // Act && Assert
+        _manager.AddStudent(student1);
+        Assert.Throws<ArgumentException>(() => _manager.AddStudent(student2));
+    }
+    
+    [Fact]
     public void GetStudentsByAge_ValidRange_ReturnsCorrectStudents()
     {
         // Arrange
