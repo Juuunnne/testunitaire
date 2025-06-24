@@ -37,6 +37,42 @@ public class StringProcessorTest
         // Assert
         Assert.Equal(expected, isPalindrome);
     }
+    
+    [Theory]
+    [InlineData("hello", "HELLO")]
+    [InlineData("Hello", "HELLO")]
+    [InlineData("", "")]
+    public void ToUpper_VariousInputs_ReturnsCorrectResult(string input, string expected)
+    {
+        // Arrange
+        var processor = new StringProcessor();
+        
+        // Act
+        processor.Capitalize(input);
+        
+        // Assert
+        Assert.Equal(expected, input);
+    }
+
+    [Fact]
+    public void ToUpper_NullInput_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var processor = new StringProcessor();
+        
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => processor.Capitalize(null));
+    }
+    
+    [Fact]
+    public void ToUpper_NumberInput_ThrowsArgumentException()
+    {
+        // Arrange
+        var processor = new StringProcessor();
+        
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => processor.Capitalize("123"));
+    }
 
 
 }
