@@ -22,12 +22,14 @@ public class BankAccount : IBankAccount
     
     public void Deposit(decimal amount)
     {
-        throw new NotImplementedException();
+        if(Balance < 0) 
+            throw new ArgumentException("Deposit amount should be positive");
+        Balance += amount;
     }
 
     public void Withdraw(decimal amount)
     {
-        throw new NotImplementedException();
+        Balance -= amount;
     }
 
     public void Transfer(BankAccount destinationAccount, decimal amount)
