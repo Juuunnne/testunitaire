@@ -1,6 +1,5 @@
 using Management.Model;
 using Management.Service;
-using System.Collections.Generic;
 
 namespace Management.UnitTest;
 
