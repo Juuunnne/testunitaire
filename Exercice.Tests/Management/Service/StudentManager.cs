@@ -34,7 +34,8 @@ public class StudentManager : IStudentManager
 
     public bool RemoveStudent(int id)
     {
-        throw new NotImplementedException();
+        var student = _students.FirstOrDefault(s => s.Id == id);
+        return student != null && _students.Remove(student);
     }
 
     public void UpdateStudentGrades(int studentId, List<int> newGrades)
