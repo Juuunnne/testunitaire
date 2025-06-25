@@ -10,27 +10,30 @@ public class StudentManager : IStudentManager
     
     public void AddStudent(Student student)
     {
-        throw new NotImplementedException();
+        if (_students.Any(s => s.Id == student.Id))
+            throw new ArgumentException("Student already exists");
+        _students.Add(student);
     }
 
     public Student GetStudentById(int id)
     {
-        throw new NotImplementedException();
+        return _students.FirstOrDefault(s => s.Id == id) ?? throw new InvalidOperationException();
     }
 
     public List<Student> GetStudentsByAge(int minAge, int maxAge)
     {
-        throw new NotImplementedException();
+        return _students.FindAll(s => s.Age >= minAge && s.Age <= maxAge) ?? throw new InvalidOperationException();
     }
 
     public List<Student> GetTopStudents(int count)
     {
-        throw new NotImplementedException();
+        return _students.OrderByDescending(s => s.AverageGrade).Take(count).ToList() ?? throw new InvalidOperationException();
     }
 
     public bool RemoveStudent(int id)
     {
-        throw new NotImplementedException();
+        var student = _students.FirstOrDefault(s => s.Id == id);
+        return student != null && _students.Remove(student);
     }
 
     public void UpdateStudentGrades(int studentId, List<int> newGrades)
