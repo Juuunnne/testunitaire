@@ -21,19 +21,19 @@ public class NotificationServiceTest
             _emailServiceMock.Object, 
             _smsServiceMock.Object, 
             _loggerMock.Object
-            );
+        );
     }
-    
+
+    [Trait("Category", "Notification")]
     [Fact]
     public async Task SendWelcomeEmailAsync_ValidEmail_SendsEmailAndLogsSuccess()
     {
         // Arrange
-        var email = "test@example.com";
+        var email = "user.test@gmail.com";
         var userName = "John Doe";
         
         _emailServiceMock.Setup(x => x.IsValidEmail(email)).Returns(true);
-        _emailServiceMock.Setup(x => x.SendEmailAsync(email, "Welcome!", It.IsAny<string>()))
-                        .ReturnsAsync(true);
+        _emailServiceMock.Setup(x => x.SendEmailAsync(email, "Welcome!", It.IsAny<string>())).ReturnsAsync(true);
         
         // Act
         var result = await _notificationService.SendWelcomeEmailAsync(email, userName);
@@ -42,12 +42,11 @@ public class NotificationServiceTest
         result.Should().BeTrue();
         
         _emailServiceMock.Verify(x => x.IsValidEmail(email), Times.Once);
-        _emailServiceMock.Verify(x => x.SendEmailAsync(email, "Welcome!", 
-                                 It.Is<string>(body => body.Contains(userName))), Times.Once);
-        _loggerMock.Verify(x => x.LogInfo(It.Is<string>(msg => msg.Contains("sent successfully"))), 
-                          Times.Once);
+        _emailServiceMock.Verify(x => x.SendEmailAsync(email, "Welcome!", It.Is<string>(body => body.Contains(userName))), Times.Once);
+        _loggerMock.Verify(x => x.LogInfo(It.Is<string>(msg => msg.Contains("sent successfully"))), Times.Once);
     }
-    
+
+    [Trait("Category", "Notification")]
     [Fact]
     public async Task SendWelcomeEmailAsync_InvalidEmail_LogsWarningAndReturnsFalse()
     {
@@ -64,36 +63,67 @@ public class NotificationServiceTest
         result.Should().BeFalse();
         
         _emailServiceMock.Verify(x => x.IsValidEmail(invalidEmail), Times.Once);
-        _emailServiceMock.Verify(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), 
-                                 It.IsAny<string>()), Times.Never);
-        _loggerMock.Verify(x => x.LogWarning(It.Is<string>(msg => msg.Contains("Invalid email"))), 
-                          Times.Once);
+        _emailServiceMock.Verify(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _loggerMock.Verify(x => x.LogWarning(It.Is<string>(msg => msg.Contains("Invalid email"))), Times.Once);
     }
-    
+
+    [Trait("Category", "Notification")]
     [Fact]
-    public async Task SendNotificationAsync_ValidEmailAndPhone_SendsBoth()
+    public async Task SendNotificationAsync_ValidEmailAndPhone_SendsBothAndReturnsTrue()
     {
         // Arrange
-        var email = "test@example.com";
-        var phone = "+1234567890";
-        var message = "Test notification";
-        
+        var email = "user.test@gmail.com";
+        var phoneNumber = "1234567890";
+        var message = "Notification message";
+
         _emailServiceMock.Setup(x => x.IsValidEmail(email)).Returns(true);
-        _emailServiceMock.Setup(x => x.SendEmailAsync(email, "Notification", message))
-                        .ReturnsAsync(true);
-        
-        _smsServiceMock.Setup(x => x.IsValidPhoneNumber(phone)).Returns(true);
-        _smsServiceMock.Setup(x => x.SendSmsAsync(phone, message)).ReturnsAsync(true);
-        
+        _emailServiceMock.Setup(x => x.SendEmailAsync(email, "Notification", message)).ReturnsAsync(true);
+
+        _smsServiceMock.Setup(x => x.IsValidPhoneNumber(phoneNumber)).Returns(true);
+        _smsServiceMock.Setup(x => x.SendSmsAsync(phoneNumber, message)).ReturnsAsync(true);
+
         // Act
-        var result = await _notificationService.SendNotificationAsync(email, phone, message);
-        
+        var result = await _notificationService.SendNotificationAsync(email, phoneNumber, message);
+
         // Assert
         result.Should().BeTrue();
-        
+        _emailServiceMock.Verify(x => x.IsValidEmail(email), Times.Once);
         _emailServiceMock.Verify(x => x.SendEmailAsync(email, "Notification", message), Times.Once);
-        _smsServiceMock.Verify(x => x.SendSmsAsync(phone, message), Times.Once);
-    }
-    
 
+        _smsServiceMock.Verify(x => x.IsValidPhoneNumber(phoneNumber), Times.Once);
+        _smsServiceMock.Verify(x => x.SendSmsAsync(phoneNumber, message), Times.Once);
+
+        _loggerMock.Verify(x => x.LogInfo(It.Is<string>(msg => msg.Contains("sent successfully"))), Times.Exactly(2));
+        _loggerMock.Verify(x => x.LogError(It.IsAny<string>()), Times.Never);
+    }
+
+    [Trait("Category", "Notification")]
+    [Fact]
+    public async Task SendNotificationAsync_EmailFailsButSmsSucceeds_ShouldReturnTrueAndLogWarning()
+    {
+        // Arrange
+        var invalidEmail = "invalid-email";
+        var phoneNumber = "1234567890";
+        var message = "Notification message";
+
+        _emailServiceMock.Setup(x => x.IsValidEmail(invalidEmail)).Returns(false);
+
+        _smsServiceMock.Setup(x => x.IsValidPhoneNumber(phoneNumber)).Returns(true);
+        _smsServiceMock.Setup(x => x.SendSmsAsync(phoneNumber, message)).ReturnsAsync(true);
+
+        // Act
+        var result = await _notificationService.SendNotificationAsync(invalidEmail, phoneNumber, message);
+
+        // Assert
+        result.Should().BeTrue();
+
+        _emailServiceMock.Verify(x => x.IsValidEmail(invalidEmail), Times.Once);
+        _emailServiceMock.Verify(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+        _smsServiceMock.Verify(x => x.IsValidPhoneNumber(phoneNumber), Times.Once);
+        _smsServiceMock.Verify(x => x.SendSmsAsync(phoneNumber, message), Times.Once);
+
+        _loggerMock.Verify(x => x.LogWarning(It.Is<string>(msg => msg.Contains("Invalid email format"))), Times.Once);
+        _loggerMock.Verify(x => x.LogInfo(It.Is<string>(msg => msg.Contains("SMS sent successfully"))), Times.Once);
+    }
 }
