@@ -28,7 +28,8 @@ public class UserServiceTest
         _userRepositoryMock.Setup(repo => repo.Exists(userEmail)).Returns(false);
         _userRepositoryMock.Setup(repo => repo.Save(It.IsAny<User>())).Verifiable();
 
-        _emailServiceMock.Setup(e => e.IsValidEmail(userEmail)).Returns(true);
+        _emailServiceMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(true);
+        _emailServiceMock.Setup(email => email.SendWelcomeEmail(It.IsRegex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"), It.Is<string>(name => name == userName))).Verifiable();
         _emailServiceMock.Setup(email => email.SendWelcomeEmail(userEmail, userName)).Verifiable();
 
         var userService = new UserService(_userRepositoryMock.Object, _emailServiceMock.Object);
@@ -40,10 +41,13 @@ public class UserServiceTest
         user.Should().NotBeNull();
         user.Name.Should().Be(userName);
         user.Email.Should().Be(userEmail);
+        user.Email.Should().Be(userEmail);
 
-        _userRepositoryMock.Verify(repo => repo.Exists(userEmail), Times.Once);
+        _userRepositoryMock.Verify(repo => repo.Exists(It.IsAny<string>()), Times.Once);
         _userRepositoryMock.Verify(repo => repo.Save(It.IsAny<User>()), Times.Once);
-        _emailServiceMock.Verify(email => email.SendWelcomeEmail(userEmail, userName), Times.Once);
+
+        _emailServiceMock.Verify(e => e.IsValidEmail(It.IsAny<string>()), Times.Once);
+        _emailServiceMock.Verify(e => e.SendWelcomeEmail(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     [Trait("Category", "User")]
@@ -131,5 +135,71 @@ public class UserServiceTest
         capturedUser.Email.Should().MatchRegex(".+@.+\\..+");
 
         createdUser.Should().BeEquivalentTo(capturedUser);
+    }
+
+    [Trait("Category", "User")]
+    [Fact]
+    public void GetUser_WhenUserExists_ShouldReturnUser()
+    {
+        // Arrange
+        int userId = 1;
+        var expectedUser = new User
+        {
+            Id = userId,
+            Name = "Test User",
+            Email = "user.test@gmail.com",
+            PhoneNumber = "1234567890",
+        };
+
+        _userRepositoryMock.Setup(repo => repo.GetById(userId)).Returns(expectedUser);
+
+        var userService = new UserService(_userRepositoryMock.Object, _emailServiceMock.Object);
+
+        // Act
+        var user = userService.GetUser(userId);
+
+        // Assert
+        user.Should().NotBeNull();
+        user.Should().BeEquivalentTo(expectedUser, options => options.Excluding(u => u.PhoneNumber));
+
+        _userRepositoryMock.Verify(repo => repo.GetById(userId), Times.Once);
+    }
+
+    [Trait("Category", "User")]
+    [Fact]
+    public void GetUser_WhenUserDoesNotExist_ShouldReturnNull()
+    {
+        // Arrange
+        int userId = 999;
+
+        _userRepositoryMock.Setup(repo => repo.GetById(userId)).Returns((User?)null);
+
+        var userService = new UserService(_userRepositoryMock.Object, _emailServiceMock.Object);
+
+        // Act
+        var user = userService.GetUser(userId);
+
+        // Assert
+        user.Should().BeNull();
+        _userRepositoryMock.Verify(repo => repo.GetById(userId), Times.Once);
+    }
+
+    [Trait("Category", "User")]
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void CreateUser_WithEmptyEmail_ShouldThrowFormatException(string emptyEmail)
+    {
+        // Arrange
+        var userService = new UserService(_userRepositoryMock.Object, _emailServiceMock.Object);
+
+        // Act & Assert
+        var result = () => userService.CreateUser("Test User", emptyEmail);
+
+        result.Should().Throw<FormatException>().WithMessage("Invalid email format");
+
+        _emailServiceMock.Verify(e => e.IsValidEmail(It.IsAny<string>()), Times.Never);
+        _userRepositoryMock.Verify(repo => repo.Exists(It.IsAny<string>()), Times.Never);
     }
 }

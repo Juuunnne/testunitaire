@@ -35,14 +35,12 @@ public class EmailService : IEmailService
     {
         if (!IsValidEmail(email))
         {
-            throw new FormatException("Invalid email address");
+            throw new ArgumentException("Invalid email address");
         }
 
         if (string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Name cannot be empty");
         }
-
-        Console.WriteLine($"Welcome email sent to {name} at {email}");
     }
 }
