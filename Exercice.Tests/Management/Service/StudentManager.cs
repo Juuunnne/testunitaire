@@ -22,7 +22,7 @@ public class StudentManager : IStudentManager
 
     public List<Student> GetStudentsByAge(int minAge, int maxAge)
     {
-        return _students.FindAll(s => s.Age > minAge && s.Age <= maxAge) ?? throw new InvalidOperationException();
+        return _students.FindAll(s => s.Age >= minAge && s.Age <= maxAge) ?? throw new InvalidOperationException();
     }
 
     public List<Student> GetTopStudents(int count)
