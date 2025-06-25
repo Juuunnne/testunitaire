@@ -12,8 +12,6 @@ public class StudentManager : IStudentManager
     {
         if (_students.Any(s => s.Id == student.Id))
             throw new ArgumentException("Student already exists");
-        if (student.Id == null)
-            throw new ArgumentException("Student id should be null");
         _students.Add(student);
     }
 
