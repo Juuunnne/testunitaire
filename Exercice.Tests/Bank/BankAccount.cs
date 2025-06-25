@@ -22,7 +22,7 @@ public class BankAccount : IBankAccount
 
     public void Deposit(decimal amount)
     {
-        if (amount < 0)
+        if(amount < 0) 
             throw new ArgumentException("Deposit amount should be positive");
         Balance += amount;
     }
