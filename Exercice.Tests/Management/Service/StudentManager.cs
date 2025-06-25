@@ -29,7 +29,7 @@ public class StudentManager : IStudentManager
 
     public List<Student> GetTopStudents(int count)
     {
-        throw new NotImplementedException();
+        return _students.OrderByDescending(s => s.AverageGrade).Take(count).ToList() ?? throw new InvalidOperationException();
     }
 
     public bool RemoveStudent(int id)
