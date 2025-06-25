@@ -19,7 +19,7 @@ public class StudentManager : IStudentManager
 
     public Student GetStudentById(int id)
     {
-        throw new NotImplementedException();
+        return _students.FirstOrDefault(s => s.Id == id) ?? throw new InvalidOperationException();
     }
 
     public List<Student> GetStudentsByAge(int minAge, int maxAge)
