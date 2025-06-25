@@ -16,6 +16,16 @@ public class UserService
 
     public User CreateUser(string name, string email)
     {
+        if (string.IsNullOrWhiteSpace(email) || !_emailService.IsValidEmail(email))
+        {
+            throw new FormatException("Invalid email format");
+        }
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Name cannot be empty");
+        }
+
         if (_userRepository.Exists(email))
         {
             throw new InvalidOperationException("User already exists");

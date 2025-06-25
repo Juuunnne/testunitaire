@@ -46,15 +46,37 @@ public class NotificationService(IEmailService emailService, ISmsService smsServ
         if (!string.IsNullOrEmpty(email) && emailService.IsValidEmail(email))
         {
             emailSent = await emailService.SendEmailAsync(email, "Notification", message);
+            if (emailSent)
+            {
+                logger.LogInfo($"Email sent successfully to {email}");
+            }
+            else
+            {
+                logger.LogError($"Failed to send email to {email}");
+            }
         }
-        
+        else if (!string.IsNullOrEmpty(email))
+        {
+            logger.LogWarning($"Invalid email format: {email}");
+        }
+
         if (!string.IsNullOrEmpty(phoneNumber) && smsService.IsValidPhoneNumber(phoneNumber))
         {
             smsSent = await smsService.SendSmsAsync(phoneNumber, message);
+            if (smsSent)
+            {
+                logger.LogInfo($"SMS sent successfully to {phoneNumber}");
+            }
+            else
+            {
+                logger.LogError($"Failed to send SMS to {phoneNumber}");
+            }
         }
-        
+        else if (!string.IsNullOrEmpty(phoneNumber))
+        {
+            logger.LogWarning($"Invalid phone number format: {phoneNumber}");
+        }
+
         return emailSent || smsSent;
     }
-    
-
 }
