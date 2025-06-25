@@ -31,6 +31,8 @@ public class BankAccount : IBankAccount
     {
         if (amount < 0)
             throw new ArgumentException("Withdraw amount should be positive");
+        if (amount > Balance)
+            throw new InvalidOperationException("Insufficient funds for withdrawal");
         Balance -= amount;
     }
 

@@ -147,6 +147,20 @@ public class BankAccountTest
 
     [Trait("Category", "Transfer")]
     [Fact]
+
+    public void Withdraw_InsufficientFunds_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var account = new BankAccount("12345", 100);
+        decimal withdrawAmount = 150;
+
+        // Act & Assert
+        var exception = Assert.Throws<InvalidOperationException>(() => account.Withdraw(withdrawAmount));
+        Assert.Equal("Insufficient funds for withdrawal", exception.Message);
+    }
+
+    [Trait("Category", "Transfer")]
+    [Fact]
     public void Transfer_ValidAmount_UpdatesBalances()
     {
         // Arrange
