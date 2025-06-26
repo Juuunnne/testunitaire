@@ -27,7 +27,7 @@ public class StudentManager : IStudentManager
 
     public List<Student> GetTopStudents(int count)
     {
-        return _students.OrderByDescending(s => s.AverageGrade).Take(count).ToList() ?? throw new InvalidOperationException();
+        return _students.OrderByDescending(s => s.AverageGrade).Take(count).ToList();
     }
 
     public bool RemoveStudent(int id)
@@ -38,10 +38,7 @@ public class StudentManager : IStudentManager
 
     public void UpdateStudentGrades(int studentId, List<int> newGrades)
     {
-        var student = GetStudentById(studentId);
-        if (student == null)
-            throw new ArgumentException("Student not found");
-            
+        var student = GetStudentById(studentId) ?? throw new ArgumentException("Student not found");
         student.Grades = newGrades ?? [];
     }
 }

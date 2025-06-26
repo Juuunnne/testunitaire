@@ -5,7 +5,7 @@ namespace LearningUnitTest;
 public class NumberListTest
 {
     [Fact]
-    public void Add_Number_IncreasesCount()
+    public void Add_Number_ShouldIncreaseCount()
     {
         // Arrange
         var list = new NumberList();
@@ -19,7 +19,7 @@ public class NumberListTest
     }
 
     [Fact]
-    public void Remove_ExistingNumber_DecreasesCount()
+    public void Remove_ExistingNumber_ShouldDecreaseCount()
     {
         // Arrange
         var list = new NumberList();
@@ -35,7 +35,7 @@ public class NumberListTest
     }
 
     [Fact]
-    public void Remove_NonExistingNumber_ReturnsFalse()
+    public void Remove_NonExistingNumber_ShouldReturnFalse()
     {
         // Arrange
         var list = new NumberList();
@@ -50,7 +50,7 @@ public class NumberListTest
     }
 
     [Fact]
-    public void GetMax_WithNumbers_ReturnsMaximum()
+    public void GetMax_WithNumbers_ShouldReturnsMaximum()
     {
         // Arrange
         var list = new NumberList();
@@ -66,7 +66,20 @@ public class NumberListTest
     }
 
     [Fact]
-    public void GetMin_WithNumbers_ReturnsMinimum()
+    public void GetMax_WithEmptyList_ShouldReturnsZero()
+    {
+        // Arrange
+        var list = new NumberList();
+
+        // Act
+        var max = list.Max();
+
+        // Assert
+        Assert.Equal(0, max);
+    }
+
+    [Fact]
+    public void GetMin_WithNumbers_ShouldReturnsMinimum()
     {
         // Arrange
         var list = new NumberList();
@@ -82,7 +95,20 @@ public class NumberListTest
     }
 
     [Fact]
-    public void GetAverage_WithNumbers_ReturnsCorrectAverage()
+    public void GetMin_WithEmptyList_ShouldReturnsZero()
+    {
+        // Arrange
+        var list = new NumberList();
+
+        // Act
+        var min = list.Min();
+
+        // Assert
+        Assert.Equal(0, min);
+    }
+
+    [Fact]
+    public void GetAverage_WithNumbers_ShouldReturnsCorrectAverage()
     {
         var list = new NumberList();
         list.Add(1);
@@ -96,6 +122,19 @@ public class NumberListTest
 
         // Assert
         Assert.Equal(3.0, average);
+    }
+
+    [Fact]
+    public void GetAverage_WithEmptyList_ShouldReturnsZero()
+    {
+        // Arrange
+        var list = new NumberList();
+
+        // Act
+        var avg = list.Average();
+
+        // Assert
+        Assert.Equal(0.0, avg);
     }
 
     [Theory]
@@ -115,5 +154,34 @@ public class NumberListTest
 
         // Assert
         Assert.Equal(expectedEmpty ? 0 : numbers.Length, list.Count());
+    }
+
+    [Fact]
+    public void GetSum_WithNumbers_ShouldReturnsCorrectSum()
+    {
+        // Arrange
+        var list = new NumberList();
+        list.Add(1);
+        list.Add(2);
+        list.Add(3);
+
+        // Act
+        var sum = list.Sum();
+
+        // Assert
+        Assert.Equal(6, sum);
+    }
+
+    [Fact]
+    public void GetSum_WithEmptyList_ShouldReturnsZero()
+    {
+        // Arrange
+        var list = new NumberList();
+
+        // Act
+        var sum = list.Sum();
+
+        // Assert
+        Assert.Equal(0, sum);
     }
 }

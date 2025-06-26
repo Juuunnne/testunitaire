@@ -177,4 +177,36 @@ public class StudentManagerTest
         // Act & Assert
         Assert.Throws<InvalidOperationException>(() => _manager.UpdateStudentGrades(99, new List<int> { 10 }));
     }
+
+    [Fact]
+    public void UpdateStudentGrades_NullGrades_SetsEmptyGrades()
+    {
+        // Arrange
+        var student = new Student { Id = 1, FirstName = "Jane", LastName = "Smith", Age = 22, Grades = { 12, 14 } };
+        _manager.AddStudent(student);
+
+        // Act
+        _manager.UpdateStudentGrades(1, null);
+
+        // Assert
+        var updated = _manager.GetStudentById(1);
+        Assert.Empty(updated.Grades);
+    }
+
+    [Fact]
+    public void Student_Properties_AverageGradeAndFullName_CalculatedCorrectly()
+    {
+        // Arrange
+        var student = new Student
+        {
+            Id = 1,
+            FirstName = "Alice",
+            LastName = "Dupont",
+            Grades = new List<int> { 10, 15, 20 }
+        };
+
+        // Act & Assert
+        Assert.Equal(15, student.AverageGrade);
+        Assert.Equal("Alice Dupont", student.FullName);
+    }
 }
