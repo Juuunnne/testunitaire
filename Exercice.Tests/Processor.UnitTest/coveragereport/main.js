@@ -215,7 +215,7 @@ var assemblies = [
     "classes": [
       { "name": "Processor.Model.ValidationResult", "rp": "Processor_ValidationResult.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Processor.Services.PasswordValidator", "rp": "Processor_PasswordValidator.html", "cl": 21, "ucl": 0, "cal": 21, "tl": 37, "cb": 18, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Processor.Services.StringProcessor", "rp": "Processor_StringProcessor.html", "cl": 32, "ucl": 0, "cal": 32, "tl": 53, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Processor.Services.StringProcessor", "rp": "Processor_StringProcessor.html", "cl": 32, "ucl": 0, "cal": 32, "tl": 56, "cb": 10, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Program", "rp": "Processor_Program.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 30, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];

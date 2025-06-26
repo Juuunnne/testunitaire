@@ -26,14 +26,14 @@ public class Operation : IOperation
         return (double)Math.Pow(a, b);
     }
 
-    public int Square(int a)
+    public double Square(double a)
     {
-        return a * a;
+        return Math.Pow(a, 2);
     }
 
-    public int Cube(int a)
+    public double Cube(double a)
     {
-        return a * a * a;
+        return Math.Pow(a, 3);
     }
 
     public int Factorial(int a)
@@ -56,10 +56,9 @@ public class Operation : IOperation
         return (int)Math.Sqrt(a);
     }
 
-    public int CubeRoot(int a)
+    public double CubeRoot(double a)
     {
-        if (a < 0) throw new ArgumentOutOfRangeException("Le nombre ne peut pas être négatif");
-        return (int)Math.Round(Math.Pow(a, 1.0 / 3.0));
+        return Math.Cbrt(a);
     }
 
     public bool IsEven(int number)

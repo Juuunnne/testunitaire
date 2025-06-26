@@ -213,7 +213,7 @@ var assemblies = [
   {
     "name": "Calculator",
     "classes": [
-      { "name": "Calculator.Operation", "rp": "Calculator_Operation.html", "cl": 42, "ucl": 0, "cal": 42, "tl": 69, "cb": 16, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Calculator.Operation", "rp": "Calculator_Operation.html", "cl": 41, "ucl": 0, "cal": 41, "tl": 68, "cb": 14, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Program", "rp": "Calculator_Program.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 17, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];

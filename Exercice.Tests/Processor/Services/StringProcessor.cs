@@ -1,4 +1,5 @@
 using Processor.Contracts;
+using System.Text.RegularExpressions;
 
 namespace Processor.Services;
 
@@ -38,16 +39,18 @@ public class StringProcessor : IStringProcessor
             return 0;
         }
 
-        string[] words = input.Split(new[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        string cleanedInput = Regex.Replace(input, @"[^\w\s]", "");
+        string[] words = cleanedInput.Split(new[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         return words.Length;
     }
 
     public string Capitalize(string input)
     {
-        if (string.IsNullOrEmpty(input))
+        if (string.IsNullOrWhiteSpace(input))
             throw new ArgumentNullException("Input cannot be null or empty");
-        if (int.TryParse(input, out int number))
-            throw new ArgumentException("Input cannot be a number");
-        return input.ToUpper();
+
+        input = input.Trim();
+
+        return char.ToUpper(input[0]) + input.Substring(1);
     }
 }

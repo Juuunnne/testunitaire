@@ -48,14 +48,14 @@ public interface IOperation
     /// </summary>
     /// <param name="a">The integer to be squared.</param>
     /// <returns>The square of the provided integer.</returns>
-    public int Square(int a);
+    public double Square(double a);
 
     /// <summary>
     /// Calculates the cube of an integer and returns the result.
     /// </summary>
     /// <param name="a">The integer to be cubed.</param>
     /// <returns>The cube of the specified integer.</returns>
-    public int Cube(int a);
+    public double Cube(double a);
 
     /// <summary>
     /// Calculates the factorial of a non-negative integer.
@@ -78,7 +78,7 @@ public interface IOperation
     /// </summary>
     /// <param name="a">The integer whose cube root needs to be calculated.</param>
     /// <returns>The cube root of the specified integer.</returns>
-    public int CubeRoot(int a);
+    public double CubeRoot(double a);
 
     /// <summary>
     /// Determines whether a given integer is even.

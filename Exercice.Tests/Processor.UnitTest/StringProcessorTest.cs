@@ -53,10 +53,13 @@ public class StringProcessorTest
 
     [Trait("Category", "String_Processing")]
     [Theory]
-    [InlineData("hello", "HELLO")]
-    [InlineData("Hello", "HELLO")]
-    [InlineData("Test avec une phrase", "TEST AVEC UNE PHRASE")]
-    public void ToUpper_VariousInputs_ReturnsCorrectResult(string input, string expected)
+    [InlineData("hello", "Hello")]
+    [InlineData("Hello", "Hello")]
+    [InlineData("Test avec une phrase", "Test avec une phrase")]
+    [InlineData("Ynov123", "Ynov123")]
+    [InlineData("123", "123")]
+    [InlineData("  leading and trailing spaces  ", "Leading and trailing spaces")]
+    public void Capitalize_VariousInputs_ReturnsCapitalizedString(string input, string expected)
     {
         // Arrange
         var processor = new StringProcessor();
@@ -69,25 +72,18 @@ public class StringProcessorTest
     }
     
     [Trait("Category", "String_Processing")]
-    [Fact]
-    public void ToUpper_NullInput_ThrowsArgumentNullException()
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("   ")]
+    [InlineData(null)]
+    public void Capitalize_NullOrWhitespaceInput_ThrowsArgumentNullException(string input)
     {
         // Arrange
         var processor = new StringProcessor();
         
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => processor.Capitalize(null));
-    }
-    
-    [Trait("Category", "String_Processing")]
-    [Fact(Skip = "Test désactivé temporairement")]
-    public void ToUpper_NumberInput_ThrowsArgumentException()
-    {
-        // Arrange
-        var processor = new StringProcessor();
-        
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => processor.Capitalize("123"));
+        Assert.Throws<ArgumentNullException>(() => processor.Capitalize(input));
     }
 
     [Trait("Category", "String_Processing")]
@@ -99,6 +95,7 @@ public class StringProcessorTest
     [InlineData("Multiple   spaces", 2)]
     [InlineData("Tabulation\tTabulation", 2)]
     [InlineData("New\nLine", 2)]
+    [InlineData("   Ta\tYnov va à ; lyon\nMaster\nClasse , 107\tThéo\tAlexandre", 10)]
     public void CountWords_VariousInputs_ReturnsCorrectCount(string input, int expectedCount)
     {
         // Arrange

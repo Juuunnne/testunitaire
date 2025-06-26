@@ -129,13 +129,13 @@ public class OperationTest
     [InlineData(10, 100)]
     [InlineData(0.25, 0.0625)]
     [InlineData(0, 0)]
-    public void Square_WithVariousInputs_ShouldReturnOperationSquare(int a, int expected)
+    public void Square_WithVariousInputs_ShouldReturnOperationSquare(double a, double expected)
     {
         // Arrange
         var operation = new Operation();
 
         // Act
-        int result = operation.Square(a);
+        double result = operation.Square(a);
 
         // Assert
         Assert.Equal(expected, result);
@@ -148,13 +148,13 @@ public class OperationTest
     [InlineData(-3, -27)]
     [InlineData(10, 1000)]
     [InlineData(0.25, 0.015625)]
-    public void Cube_WithVariousInputs_ShouldReturnOperationCube(int a, int expected)
+    public void Cube_WithVariousInputs_ShouldReturnOperationCube(double a, double expected)
     {
         // Arrange
         var operation = new Operation();
 
         // Act
-        int result = operation.Cube(a);
+        double result = operation.Cube(a);
 
         // Assert
         Assert.Equal(expected, result);
@@ -225,28 +225,17 @@ public class OperationTest
     [InlineData(8, 2)]
     [InlineData(0, 0)]
     [InlineData(1000, 10)]
+    [InlineData(-27, -3)]
     public void CubeRoot_WithPositiveInputs_ShouldReturnOperationCubeRoot(int a, int expected)
     {
         // Arrange
         var operation = new Operation();
 
         // Act
-        int result = operation.CubeRoot(a);
+        double result = operation.CubeRoot(a);
 
         // Assert
         Assert.Equal(expected, result);
-    }
-
-    [Trait("Category", "Operation_CubeRoot_With_Negative_Input")]
-    [Fact]
-    public void CubeRoot_WithNegativeInput_ShouldThrowException()
-    {
-        // Arrange
-        var operation = new Operation();
-        int a = -8;
-
-        // Assert
-        Assert.Throws<ArgumentOutOfRangeException>(() => operation.CubeRoot(a));
     }
 
     [Trait("Category", "Operation_IsEven")]
